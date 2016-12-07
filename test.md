@@ -5,9 +5,10 @@
 It's very easy to make some words **bold** and other words *italic* with Markdown. You can even [link to Google!](http://google.com)
 
 
-
 # This is an <h1> tag
+
 ## This is an <h2> tag
+
 ###### This is an <h6> tag
 
 *This text will be italic*
@@ -21,15 +22,15 @@ _You **can** combine them_
 * Item 1
 * Item 2
   * Item 2a
-    * Item 2b
+  * Item 2b
 
 
 
-	1. Item 1
-	2. Item 2
-	3. Item 3
-	   * Item 3a
-	      * Item 3b
+1. Item 1
+2. Item 2
+3. Item 3
+   * Item 3a
+   * Item 3b
 
 gitHub Logo](/images/logo.png)
 Format: ![Alt Text](url)
@@ -51,19 +52,19 @@ function fancyAlert(arg) {
       $.facebox({div:'#foo'})
 	    }
 		}
-		```
+```
 
     function fancyAlert(arg) {
-	      if(arg) {
-		          $.facebox({div:'#foo'})
-				        }
-						    }
+	if(arg) {
+		$.facebox({div:'#foo'})
+	}
+	}
 
 
 
 def foo():
     if not bar:
-	        return True
+	return True
 
 
 - [x] @mentions, #refs, [links](), **formatting**, and <del>tags</del> supported
@@ -79,6 +80,7 @@ First Header | Second Header
 Content from cell 1 | Content from cell 2
 Content in the first column | Content in the second column
 
-~this~~
+~~this~~
 
 :sweat:
+

@@ -6,9 +6,9 @@ title: Reducing  inheritance ( and code) using namspaces
 
 As Sean Parent has famously said ["Inheritance Is The Base Class of Evil"](https://channel9.msdn.com/Events/GoingNative/2013/Inheritance-Is-The-Base-Class-of-Evil)
 
-Similarly the C++ Core Guidlines say we should prefer [Concrete and Regular Type](https://github.com/isocpp/CppCoreGuidelines/blob/master/CppCoreGuidelines.md#SS-concrete)
+Similarly the C++ Core Guidlines say we should prefer [Concrete and Regular Types](https://github.com/isocpp/CppCoreGuidelines/blob/master/CppCoreGuidelines.md#SS-concrete)
 
-This leads us to the alternative of Composition. However composition can require more (iften repedative) code.
+This leads us to the alternative of Composition. However composition can require more (often repedative) code.
 
 For example consider these three base classes.
 
@@ -40,13 +40,41 @@ std_string address_;
 };
 ```
 
-and then these two composite (dervived) classes
+and then these two composite (dervived) structures
 ```
-class Employee
+struct Employee
 {
+Id id;
+Name name;
+Address address;
 }:
 
-class Customer
+struct Customer
 {
+Id id;
+Name name;
+Address address;
 };
 ```
+This code is obviously repedative (in breach of the DRY guideline) and using inheritance we would probably create the obvious Person struct.
+
+```
+struct Person
+{
+Id id;
+Name name;
+Address address;
+};
+```
+
+resulting in the much shorter
+
+```
+struct Employee : public Person
+{
+}
+struct Customer : public Person
+{
+}
+```
+However this code inplies that Employees and Customers are the same

@@ -41,7 +41,7 @@ std_string address_;
 ```
 
 and then these two composite (dervived) structures
-```
+```c++
 struct Employee
 {
 Id id;
@@ -58,7 +58,7 @@ Address address;
 ```
 This code is obviously repedative (in breach of the DRY guideline) and using inheritance we would probably create the obvious Person struct.
 
-```
+```c++
 struct Person
 {
 Id id;
@@ -69,7 +69,7 @@ Address address;
 
 resulting in the much shorter
 
-```
+```c++
 struct Employee : public Person
 {
 }
@@ -79,7 +79,7 @@ struct Customer : public Person
 ```
 However this code implies that Employees and Customers are the same i.e. both people. But consider a Wholesaler who Customers are (always?) Businesses. Then we need another struct
 
-```
+```c++
 struct Business
 {
 Id id;
@@ -93,7 +93,7 @@ struct Customer : public Business
 ```
 and we are repeating ourselves again. So again we create another struct (Details for want of a better name)
 
-```
+```c++
 struct Details
 {
 Id id;
@@ -104,7 +104,7 @@ Address address;
 
 and derive Person and Business
 
-```
+```c++
 struct Person : public Details
 {
 };
@@ -115,7 +115,7 @@ struct Business : public Details
 ```
 Again we have minimized the code but again we have linked four types that may in fact have no connection. Employee, Customer, Person and Business all derive from Details so we can have
 
-```
+```c++
 Employee alice;
 Employee bob;
 Customer acme;
@@ -124,16 +124,18 @@ Business delta;
 ```
 and we can write
 
-```
-	alice = bob = acme = charlie = delta; // Warning Splitting!!
+```c++
+alice = bob = acme = charlie = delta; // Warning Splitting!!
+
 or
-	alice.id = bob.id = acme.id = charlie.id = delta.id;
+
+alice.id = bob.id = acme.id = charlie.id = delta.id;
 ```
 which is not particularly Type Safe.
 
 Now lets add another detail such as Next_of_kin. Businesses do not have next of kin so we should not put it in the Details structure and it goes in the Person instead.
 
-```
+```c++
 struct Person : public Detail
 {
 	std::string next_of_kin;
@@ -144,7 +146,7 @@ and the result is that we can have an Employee with a Next_of_kin detail but at 
 Further lets us add  Birthdate and Age, again to the Person
 
 
-```
+```c++
 struct Person : public Detail
 {
 	std::string next_of_kin;
@@ -153,7 +155,7 @@ struct Person : public Detail
 };
 ```
 but `birth_date` and `age` are an Invariant so one should calculate from the other
-```
+```c++
 struct Person : public Detail
 {
 	std::string next_of_kin;
@@ -165,7 +167,7 @@ struct Person : public Detail
 and the Guidelines say that Invariants should be in classes, not structs, and classes should not expose their variable directly leading to
 
 
-```
+```c++
 class Person : public Detail
 {
 public:
@@ -181,7 +183,7 @@ private:
 
 All well and good but now when we use Employee
 
-```
+```c++
 Employee alice;
 
 auto name = alice.name;
@@ -193,7 +195,7 @@ we access two apparently similar details in two different way. Not only that Emp
 So we add the necessary functions to Person and make Emplyee a class
 
 
-```
+```c++
 class Person : public Detail
 {
 public:
@@ -215,16 +217,16 @@ class Employee :: public Person
 ```
 
 but we can still write
-```
-	alice = bob = acme = charlie = delta; // Warning Splitting!!
+```c++
+alice = bob = acme = charlie = delta; // Warning Splitting!!
 ```
 but not
-```
-	alice.id = bob.id = acme.id = charlie.id = delta.id;
+```c++
+alice.id = bob.id = acme.id = charlie.id = delta.id;
 ```
  as we need setters as well
 
-```
+```c++
 class Person : public Detail
 {
 public:
@@ -247,27 +249,27 @@ private:
 };
 ```
 allowing equivalent non-Type Safe
-```
-	charlie.id(delta.id);
-	acme.id=charlie.id();
-	bob.id(acme.id);
-	alice.id(bob.id());
+```c++
+charlie.id(delta.id);
+acme.id=charlie.id();
+bob.id(acme.id);
+alice.id(bob.id());
 ```
 
 which is a confusing mess I think all would agree.
 
 So the 'solution' here is make everything a class and access all member variables by member functions (getters and setters) so we can write
 
-```
-	charlie.id(delta.id());
-	acme.id(charlie.id());
-	bob.id(acme.id());
-	alice.id(bob.id());
+```c++
+charlie.id(delta.id());
+acme.id(charlie.id());
+bob.id(acme.id());
+alice.id(bob.id());
 ```
 which is still not Type Safe.
 
 The final Inheritance code in the simplified world is
-```
+```c++
 class Id
 {
 pubilc:
@@ -279,15 +281,15 @@ private:
 class Name
 {
 public:
-std::string value(){ return name_;}
+	std::string value(){ return name_;}
 private:
-std::string name_;
+	std::string name_;
 };
 
 class Address
 {
 public:
-std::string value(){return address_;}
+	std::string value(){return address_;}
 private:
 std_string address_;
 };
@@ -343,28 +345,28 @@ Note we still have details declared at different inheritance levels ( so we can 
 
 To make the code Type Safe we need to stop code such as this
 
-```
-	Employee alice;
-	Customer acme;
+```c++
+Employee alice;
+Customer acme;
 	
-	alice.id(acme.id());
+alice.id(acme.id());
 ```
 which implies the value of the ids ( to be unique) come for the same source ( say a GUID)nd even then is not Type Safe.
 
-So `alice.id()` and 'acme.id()` need to return different type implying that they are different classes.
+So `alice.id()` and `acme.id()` need to return different type implying that they are different classes.
 
 But how do we declare those classes?
 
 We could declare a `Person_id` and a `Business_id` but if we have another class derived from Person
-```
+```c++
 class Contractor : public Person
 {
 };
 ```
-Then we end up with the same issue. So we need different top level Ids ( Note if there is a database involved then you are almost gaurentteed to require top level Ids). Thus we have
+Then we end up with the same issue. So we need different top level Ids ( Note if there is a database involved then you are almost guaranteed to require top level Ids). Thus we have
 
-```
-	class Employee_id : Id
+```c++
+class Employee_id : Id
 {
 };
 
@@ -374,36 +376,36 @@ class Customer_id: Id
 ```
 
 and either
-```
-	class Employee: public Person, public Employee_id // Diamond Inheritance!!
+```c++
+class Employee: public Person, public Employee_id // Diamond Inheritance!!
 {
 };
 
 or
-	class Customer : public Business
+
+class Customer : public Business
 {
-	public:
-		Customer_id id(){ return id_;}  // Shading!!
-		void id(Customer_id value){ id_=value;}
-	private:
+public:
+	Customer_id id(){ return id_;}  // Shading!!
+	void id(Customer_id value){ id_=value;}
+private:
 	Customer_id id_;
 };
 ```
 The 'Fix' in both cases is to remove Id from Details (and add `Person_id` and `Bussiness_id' classes) or give the Employee and Customer Id functions different names i.e. employee_id() and customer_id(). This second solution however means that we redundantly have to write
 ```
-	Employee alice;
+Employee alice;
 	
-	auto id = alice.employee_id();
+auto id = alice.employee_id();
 ```
 
 and unless we hide it 
 ```
-	auto id = alice.id()  // What does this mean??
+auto id = alice.id()  // What does this mean??
 ```
 So the first fix then
 
-
-```
+```c++
 class Detail
 {
 public:
@@ -423,7 +425,7 @@ private:
 ```
 But Type-wise Name and Address are no different to Id ( each can have different business rules) so we do the same with them.Detail is now empty and pointless ( ad by recursion so is Business) and we get
 
-```
+```c++
 class Employee : public Person
 {
 public:

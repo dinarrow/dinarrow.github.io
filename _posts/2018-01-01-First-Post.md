@@ -1,8 +1,10 @@
 ---
-title: Reducing  inheritance ( and code) using namspaces
+layout: post
+title: Reducing  inheritance ( and code) with Type Safety using Namspaces
+date: 2018-01-01T00:00:00.000Z
 ---
 
-# Reducing  inheritance ( and code) with Type Safety using namespaces
+# Reducing  inheritance ( and code) with Type Safety using Namespaces
 
 As Sean Parent has famously said ["Inheritance Is The Base Class of Evil"](https://channel9.msdn.com/Events/GoingNative/2013/Inheritance-Is-The-Base-Class-of-Evil)
 

@@ -2,7 +2,7 @@
 title: Reducing  inheritance ( and code) using namspaces
 ---
 
-# Reducing  inheritance ( and code) using namspaces
+# Reducing  inheritance ( and code) with Type Safety using namespaces
 
 As Sean Parent has famously said ["Inheritance Is The Base Class of Evil"](https://channel9.msdn.com/Events/GoingNative/2013/Inheritance-Is-The-Base-Class-of-Evil)
 
@@ -177,6 +177,7 @@ private:
 	std::string next_of_kin_;
 	Date birth_date_;
 };
+```
 
 All well and good but now when we use Employee
 

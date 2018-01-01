@@ -77,4 +77,65 @@ struct Customer : public Person
 {
 }
 ```
-However this code inplies that Employees and Customers are the same
+However this code implies that Employees and Customers are the same i.e. both people. But consider a Wholesaler who Customers are (always?) Businesses. Then we need another struct
+
+```
+struct Business
+{
+Id id;
+Name name;
+Address address;
+}
+
+struct Customer : public Business
+{
+}
+```
+and we are repeating ourselves again. So again we create another struct (Details for want of a better name)
+
+```
+struct Details
+{
+Id id;
+Name name;
+Address address;
+};
+```
+
+and derive Person and Business
+
+```
+struct Person : public Details
+{
+}
+
+struct Business : public Details
+{
+}
+```
+Again we have minimized the code but again we have linked four types that may in fact have no connection. Employee, Customer, Person and Business all derive from Details so we can have
+
+```
+Employee alice;
+Employee bob;
+Customer acme;
+Person charlie;
+Business delta;
+```
+and we can write
+
+```
+	alice = bob = acme = charlie = delta; // Warning Splitting!!
+or
+	alice.id = bob.id = acme.id = charlie.id = delta.id;
+```
+which is not particularly Type Safe.
+
+Now lets add another detail such as Next_of_kin. Businesses do not have next of kin so we should not put it in the Details structure and it goes in the Person instead.
+
+```
+struct Person : public Detail
+{
+	std::string next_of_kin;
+}
+```

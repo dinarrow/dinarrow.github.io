@@ -435,7 +435,7 @@ public:
 
 	void id(Employee_Id id value){ id_= value;}
 	void name(Employee_name value){name_= value;}
-	void address(Employee_address){address_= value;}
+	void address(Employee_address value){address_= value;}
 
 private:
 	Employee_Id id_
@@ -447,13 +447,13 @@ private:
 class Customer
 {
 public:
-	Customer_Id id(){ return id_;}
-	Customer_Name name(){return name_;}
-	Customer_Address address(){return address_;}
+	Customer_id id(){ return id_;}
+	Customer_name name(){return name_;}
+	Customer_address address(){return address_;}
 
 	void id(Customer_Id id value){ id_= value;}
 	void name(Customer_name value){name_= value;}
-	void address(Customer_address){address_= value;}
+	void address(Customer_address value){address_= value;}
 
 private:
 	Customer_Id id_
@@ -461,4 +461,344 @@ private:
 	Customer_Address address_;
 };
 ```
-Which basically brings us back to where we started!!
+Which basically brings us back to where we started with duplicate code!!
+
+So what happens if we introduce a namespace
+
+```c++
+namespace employee
+{
+class Employee_id : Id
+{
+};
+
+class Employee_name : Name
+{
+};
+
+class Employee_address : Address
+{
+};
+
+class Employee : public Person
+{
+public:
+	Employee_id id(){ return id_;}
+	Employee_name name(){return name_;}
+	Employee_address address(){return address_;}
+
+	void id(Employee_Id id value){ id_= value;}
+	void name(Employee_name value){name_= value;}
+	void address(Employee_address value){address_= value;}
+
+private:
+	Employee_Id id_
+	Employee_Name name_;
+	Employee_Address address_;
+
+};
+}
+```
+
+Immediately we can see there is a lot of redundancy in terms of text such as employee::Employee_id for example. This is easily removed
+
+```c++
+namespace employee
+{
+class Id : ::Id
+{
+};
+
+class Name : ::Name
+{
+};
+
+class Address : ::Address
+{
+};
+
+class Employee : public Person
+{
+public:
+	Id id(){ return id_;}
+	Name name(){return name_;}
+	Address address(){return address_;}
+
+	void id(Id id value){ id_= value;}
+	void name(Name value){name_= value;}
+	void address(Address value){address_= value;}
+
+private:
+	Id id_
+	Name name_;
+	Address address_;
+
+};
+}
+```
+and the Employee class looks a lot cleaner. The other classes however still appear redundant as they are just simple wrappers to obtain a unique type. An alternative mechanism to do this is a Template. If we simply turn the base classes into templates
+
+
+```c++
+template < typename T>
+class Id
+{
+pubilc:
+  int value(){return id_};
+private:
+  int id_;
+};
+
+template < typename T>
+class Name
+{
+public:
+	std::string value(){ return name_;}
+private:
+	std::string name_;
+};
+
+template < typename T>
+class Address
+{
+public:
+	std::string value(){return address_;}
+private:
+std_string address_;
+};
+```
+
+we can write
+
+```c++
+namespace employee
+{
+
+class Employee : public Person
+{
+public:
+	Id<Employee> id(){ return id_;}
+	Name<Employee> name(){return name_;}
+	Address<Employee> address(){return address_;}
+
+	void id(Id<Employee> id value){ id_= value;}
+	void name(Name<Employee> value){name_= value;}
+	void address(Address<Employee> value){address_= value;}
+
+private:
+	Id<Employee> id_
+	Name<Employee> name_;
+	Address<Employee> address_;
+
+};
+}
+```
+although the Employee class is more cluttered. We can do better if we forward declare the class and put the base classes in their own namespace
+```c++
+namespace Base
+{
+template < typename T>
+class Id
+{
+pubilc:
+  int value(){return id_};
+private:
+  int id_;
+};
+
+template < typename T>
+class Name
+{
+public:
+	std::string value(){ return name_;}
+private:
+	std::string name_;
+};
+
+template < typename T>
+class Address
+{
+public:
+	std::string value(){return address_;}
+private:
+std_string address_;
+};
+}
+
+namespace employee
+{
+class Employee;
+using Id = Base::Id<Employee>;
+using Name = Base::Name<Employee>;
+using Address = Base::Address<Employee>;
+
+class Employee : public Person
+{
+public:
+	Id id(){ return id_;}
+	Name name(){return name_;}
+	Address address(){return address_;}
+
+	void id(Id id value){ id_= value;}
+	void name(Name value){name_= value;}
+	void address(Address value){address_= value;}
+
+private:
+	Id id_
+	Name name_;
+	Address address_;
+
+};
+}
+```
+which is nice and clean. 
+
+We can do similar for Customer
+
+
+```c++
+namespace customer
+{
+class Customer;
+using Id = Base::Id<Customer>;
+using Name = Base::Name<Customer>;
+using Address = Base::Address<Customer>;
+
+class Customer
+{
+public:
+	Id id(){ return id_;}
+	Name name(){return name_;}
+	Address address(){return address_;}
+
+	void id(Id id value){ id_= value;}
+	void name(Name value){name_= value;}
+	void address(Address value){address_= value;}
+
+private:
+	Id id_
+	Name name_;
+	Address address_;
+
+};
+}
+```
+But we can go yet further. Notice that if we ignore the remaining inheritance ( Person class) Employee and Customer differ only in those words and this is not required as the are in different namespaces. If we replace them both with the word 'Class' we get
+```c++
+namespace employee
+{
+class Class;
+using Id = Base::Id<Class>;
+using Name = Base::Name<Class>;
+using Address = Base::Address<Class>;
+
+class Class : public Person
+{
+public:
+	Id id(){ return id_;}
+	Name name(){return name_;}
+	Address address(){return address_;}
+
+	void id(Id id value){ id_= value;}
+	void name(Name value){name_= value;}
+	void address(Address value){address_= value;}
+
+private:
+	Id id_
+	Name name_;
+	Address address_;
+
+};
+}
+namespace customer
+{
+class Class;
+using Id = Base::Id<Class>;
+using Name = Base::Name<Class>;
+using Address = Base::Address<Class>;
+
+class Class
+{
+public:
+	Id id(){ return id_;}
+	Name name(){return name_;}
+	Address address(){return address_;}
+
+	void id(Id id value){ id_= value;}
+	void name(Name value){name_= value;}
+	void address(Address value){address_= value;}
+
+private:
+	Id id_
+	Name name_;
+	Address address_;
+
+};
+}
+```
+and the code in each namespace is exactly the same ( except for the inheritance).
+
+Now we have to get our hands a little bit dirty and do something not normally regarded as 'correct'. If we take the forward declarations and put then in a file.
+
+```c++
+// File: forward_declarations.inc
+
+class Class;
+using Id = Base::Id<Class>;
+using Name = Base::Name<Class>;
+using Address = Base::Address<Class>;
+
+```
+ and put the class definitions in another file
+```c++
+// File: class_definitions.inc
+
+public:
+	Id id(){ return id_;}
+	Name name(){return name_;}
+	Address address(){return address_;}
+
+	void id(Id id value){ id_= value;}
+	void name(Name value){name_= value;}
+	void address(Address value){address_= value;}
+
+private:
+	Id id_
+	Name name_;
+	Address address_;
+
+```
+we can then write
+```c++
+namespace employee
+{
+#include forward_delarations.inc
+
+class Class : public Person
+{
+#include class_definitions.inc
+};
+}
+
+namespace customer
+{
+#include forward_delarations.inc
+
+class Class
+{
+#include forward_delarations.inc
+};
+}
+```
+and even
+```c++
+namespace contractor
+{
+#include forward_delarations.inc
+
+class Class : public Person
+{
+#include class_definitions.inc
+};
+}
+```

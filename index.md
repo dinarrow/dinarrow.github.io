@@ -7,7 +7,7 @@ author_profile: true
 ### Recent Posts
 
 {% for post in paginator.posts %}
-{% include archive-single.html %}
+
 {% endfor %}
 
 

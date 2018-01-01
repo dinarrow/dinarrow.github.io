@@ -2,12 +2,12 @@
 layout: archive
 author_profile: true
 ---
-&#217;% include base_path %}
+(% include base_path %}
 
-&LT;h3 class="archive__subtitle">Recent Posts&LT;/h3>
+### Recent Posts
 
-&#217;% for post in paginator.posts %}
-&#217;% include archive-single.html %}
-&#217;% endfor %}
+(% for post in paginator.posts %}
+(% include archive-single.html %}
+(% endfor %}
 
-&#217;% include paginator.html %}
+(% include paginator.html %}

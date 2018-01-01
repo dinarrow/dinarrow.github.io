@@ -805,3 +805,13 @@ class Class : public Person
 };
 }
 ```
+So what have we ended up with?
+
+ We have Type Safe classes with minimal code repeatition requiring zero Inheritance. 
+Classes can be concrete, allocated on the stack and be reasoned about locally.
+There is almost no coupling between classes and an individual class can be modified or replaces without impact on surrounding code.
+Behaviour unique to a class is obvious ( not in an include file) and changing a common behaviour ( variation of a Person for example) only requires the include file to be copied into the class ( and become obvious)  and be modified.
+
+On the negative we have used #includes for code outside the headers and this is not by default handled well by editors or IDEs. Also what about other functions of Inheritance such as Polymorphism?
+
+These benefits, disadvantage and questions I hope to explore further in later posts along with further expansions of this coding scheme.

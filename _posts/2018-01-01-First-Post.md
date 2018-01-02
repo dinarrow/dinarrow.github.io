@@ -1,17 +1,17 @@
 ---
 theme: jekyll-theme-hacker
 layout: default
-title: Reducing  inheritance ( and code) with Type Safety using Namespaces
+title: Reducing  Inheritance ( and code) with Type Safety using Namespaces
 date: 2018-01-01 00:00:00
 ---
 
-# Reducing  inheritance ( and code) with Type Safety using Namespaces
+# Reducing  Inheritance ( and code) with Type Safety using Namespaces
 
 As Sean Parent has famously said ["Inheritance Is The Base Class of Evil"](https://channel9.msdn.com/Events/GoingNative/2013/Inheritance-Is-The-Base-Class-of-Evil)
 
 Similarly the C++ Core Guidlines say we should prefer [Concrete and Regular Types](https://github.com/isocpp/CppCoreGuidelines/blob/master/CppCoreGuidelines.md#SS-concrete)
 
-This leads us to the alternative of Composition. However composition can require more (often repedative) code.
+This leads us to the alternative of Composition. However Composition can require more (often repedative) code.
 
 For example consider these three base classes.
 
@@ -43,7 +43,7 @@ std_string address_;
 };
 ```
 
-and then these two composite (dervived) structures
+and then these two composited structures
 ```c++
 struct Employee
 {
@@ -116,7 +116,7 @@ struct Business : public Details
 {
 };
 ```
-Again we have minimized the code but again we have linked four types that may in fact have no connection. Employee, Customer, Person and Business all derive from Details so we can have
+Again we have minimized the code but now we have linked four types that may in fact have no connection. Employee, Customer, Person and Business all derive from Details so we can have
 
 ```c++
 Employee alice;
@@ -128,7 +128,7 @@ Business delta;
 and we can write
 
 ```c++
-alice = bob = acme = charlie = delta; // Warning Splitting!!
+alice = bob = acme = charlie = delta; // Warning [Slicing!!](https://stackoverflow.com/questions/274626/what-is-object-slicing)
 
 or
 

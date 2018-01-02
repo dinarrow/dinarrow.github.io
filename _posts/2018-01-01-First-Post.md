@@ -775,39 +775,94 @@ we can then write
 ```c++
 namespace employee
 {
-#include forward_delarations.inc
+#include "forward_delarations.inc"
 
 class Class : public Person
 {
-#include class_definitions.inc
+#include "class_definitions.inc"
 };
 }
 
 namespace customer
 {
-#include forward_delarations.inc
+#include "forward_delarations.inc"
 
 class Class
 {
-#include forward_delarations.inc
+#include "forward_delarations.inc"
 };
 }
 ```
-and even
+and if we have a Contractor provided by and Agency
 ```c++
 namespace contractor
 {
-#include forward_delarations.inc
+#include "forward_delarations.inc"
 
 class Class : public Person
 {
-#include class_definitions.inc
+#include "class_definitions.inc"
+
+public:
+	Agency agency(){ return agency_;}
+	void agency(Agency value){ agency_=value;}
+
+private:
+	Agency agency_;
 };
 }
 ```
+Similarly we can replace the remaining inheritance with a composite class and some helper functions.
+```c++
+namespace contractor
+{
+#include "forward_delarations.inc"
+
+class Class
+{
+#include "class_definitions.inc"
+
+public:
+	Agency agency(){ return agency_;}
+	void agency(Agency value){ agency_=value;}
+
+private:
+	Agency agency_;
+
+public:
+	Person person(){ return person_;}
+	void person(Person value){ person_=value;}
+
+// helpers
+	std::string next_of_kin(){return person.next_of_kin();};
+	Date birth_date() { return person.birth_date();}
+	Age age(){ person.age();}
+
+private:
+	Person person_;
+};
+}
+```
+Finally both the Agency and Person code can be shifted to their own include file to give
+```c++
+namespace contractor
+{
+#include "forward_delarations.inc"
+
+class Class
+{
+#include "class_definitions.inc"
+#include "agency.inc"
+#include "person.inc"
+
+};
+}
+```
+
+
 So what have we ended up with?
 
- We have Type Safe classes with minimal code repeatition requiring zero Inheritance. 
+ We have Type Safe classes with minimal code repetition requiring zero Inheritance. 
 Classes can be concrete, allocated on the stack and be reasoned about locally.
 There is almost no coupling between classes and an individual class can be modified or replaces without impact on surrounding code.
 Behaviour unique to a class is obvious ( not in an include file) and changing a common behaviour ( variation of a Person for example) only requires the include file to be copied into the class ( and become obvious)  and be modified.

@@ -835,7 +835,9 @@ public:
 
 // helpers
 	std::string next_of_kin(){return person.next_of_kin();};
+	void next_of_kin(std::string value){ person.next_of_kin(value);}
 	Date birth_date() { return person.birth_date();}
+	void birth_date(Date value){person.birth_date(value);}
 	Age age(){ person.age();}
 
 private:

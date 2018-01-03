@@ -128,7 +128,7 @@ Business delta;
 and we can write
 
 ```c++
-alice = bob = acme = charlie = delta; // Warning [Slicing!!](https://stackoverflow.com/questions/274626/what-is-object-slicing)
+alice = bob = acme = charlie = delta; // Warning Slicing!!
 
 or
 
@@ -157,7 +157,7 @@ struct Person : public Detail
 	Age age;
 };
 ```
-but `birth_date` and `age` are an Invariant so one should calculate from the other
+but `birth_date` and `age` are an Invariant so one should be calculated from the other
 ```c++
 struct Person : public Detail
 {
@@ -221,7 +221,7 @@ class Employee :: public Person
 
 but we can still write
 ```c++
-alice = bob = acme = charlie = delta; // Warning Splitting!!
+alice = bob = acme = charlie = delta; // Warning Slicing!!
 ```
 but not
 ```c++
@@ -354,9 +354,9 @@ Customer acme;
 	
 alice.id(acme.id());
 ```
-which implies the value of the ids ( to be unique) come for the same source ( say a GUID)nd even then is not Type Safe.
+which implies the value of the ids ( to be unique) come for the same source ( say a GUID) and even then is not Type Safe.
 
-So `alice.id()` and `acme.id()` need to return different type implying that they are different classes.
+So `alice.id()` and `acme.id()` need to return different types implying that they are different classes.
 
 But how do we declare those classes?
 
@@ -395,7 +395,7 @@ private:
 	Customer_id id_;
 };
 ```
-The 'Fix' in both cases is to remove Id from Details (and add `Person_id` and `Bussiness_id' classes) or give the Employee and Customer Id functions different names i.e. employee_id() and customer_id(). This second solution however means that we redundantly have to write
+The 'Fix' in both cases is to remove Id from Details (and add `Person_id` and `Bussiness_id` classes) or give the Employee and Customer Id functions different names i.e. employee_id() and customer_id(). This second solution however means that we redundantly have to write
 ```
 Employee alice;
 	
@@ -426,7 +426,7 @@ private:
 	Address_ address_;
 };
 ```
-But Type-wise Name and Address are no different to Id ( each can have different business rules) so we do the same with them.Detail is now empty and pointless ( ad by recursion so is Business) and we get
+But Type-wise Name and Address are no different to Id ( each can have different business rules) so we do the same with them. Detail is now empty and pointless ( and by recursion so is Business) and we get
 
 ```c++
 class Employee : public Person
@@ -598,7 +598,7 @@ private:
 ```
 although the Employee class is more cluttered. We can do better if we forward declare the class and put the base classes in their own namespace
 ```c++
-namespace Base
+namespace base
 {
 template < typename T>
 class Id
@@ -631,9 +631,9 @@ std_string address_;
 namespace employee
 {
 class Employee;
-using Id = Base::Id<Employee>;
-using Name = Base::Name<Employee>;
-using Address = Base::Address<Employee>;
+using Id = base::Id<Employee>;
+using Name = base::Name<Employee>;
+using Address = base::Address<Employee>;
 
 class Employee : public Person
 {
@@ -663,9 +663,9 @@ We can do similar for Customer
 namespace customer
 {
 class Customer;
-using Id = Base::Id<Customer>;
-using Name = Base::Name<Customer>;
-using Address = Base::Address<Customer>;
+using Id = base::Id<Customer>;
+using Name = base::Name<Customer>;
+using Address = base::Address<Customer>;
 
 class Customer
 {
@@ -691,9 +691,9 @@ But we can go yet further. Notice that if we ignore the remaining inheritance ( 
 namespace employee
 {
 class Class;
-using Id = Base::Id<Class>;
-using Name = Base::Name<Class>;
-using Address = Base::Address<Class>;
+using Id = base::Id<Class>;
+using Name = base::Name<Class>;
+using Address = base::Address<Class>;
 
 class Class : public Person
 {
@@ -716,9 +716,9 @@ private:
 namespace customer
 {
 class Class;
-using Id = Base::Id<Class>;
-using Name = Base::Name<Class>;
-using Address = Base::Address<Class>;
+using Id = base::Id<Class>;
+using Name = base::Name<Class>;
+using Address = base::Address<Class>;
 
 class Class
 {
@@ -747,9 +747,9 @@ Now we have to get our hands a little bit dirty and do something not normally re
 // File: forward_declarations.inc
 
 class Class;
-using Id = Base::Id<Class>;
-using Name = Base::Name<Class>;
-using Address = Base::Address<Class>;
+using Id = base::Id<Class>;
+using Name = base::Name<Class>;
+using Address = base::Address<Class>;
 
 ```
  and put the class definitions in another file
@@ -793,7 +793,7 @@ class Class
 };
 }
 ```
-and if we have a Contractor provided by and Agency
+and if we have a Contractor provided by an Agency
 ```c++
 namespace contractor
 {
@@ -812,7 +812,7 @@ private:
 };
 }
 ```
-Similarly we can replace the remaining inheritance with a composite class and some helper functions.
+Similarly we can replace the remaining inheritance with a composite class and some helper functions ( so the interface is is unchanged).
 ```c++
 namespace contractor
 {
@@ -860,8 +860,6 @@ class Class
 };
 }
 ```
-
-
 So what have we ended up with?
 
  We have Type Safe classes with minimal code repetition requiring zero Inheritance. 

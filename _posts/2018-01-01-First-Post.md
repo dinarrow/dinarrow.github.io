@@ -21,7 +21,7 @@ For example consider these three base classes.
 class Id
 {
 pubilc:
-  int value(){return id_};
+  int value(){return id_;};
 private:
   int id_;
 };
@@ -39,7 +39,7 @@ class Address
 public:
 std::string value(){return address_;}
 private:
-std_string address_;
+std::string address_;
 };
 ```
 
@@ -124,8 +124,13 @@ Employee* bob = new Employee;
 Customer* acme = new Customer;
 Person* charlie = new Person;
 Business* delta =new Business;
+Detail* fred=nullptr;
 
-*alice = *bob = *acme = *charlie = *delta; // Warning Slicing!!
+alice = bob;
+charlie = alice; // Slicing!!
+fred = charlie; // Slicing!!
+delta = acme; // Slicing!!
+fred = delta; // Slicing!!
 ```
 
 or
@@ -199,7 +204,7 @@ auto next_of_kin = alice.next_of_kin();
 
 we access two apparently similar details in two different way. Not only that Employee is now a `struct` with member functions and Perosn is a `class` with member variables.
 
-So we add the necessary functions to Person and make Emplyee a class
+So we add the necessary functions to Person and make Employee a class
 
 
 ```c++
@@ -225,8 +230,19 @@ class Employee :: public Person
 
 but we can still write
 ```c++
-*alice = *bob = *acme = *charlie = *delta; // Warning Slicing!!
 
+Employee* alice = new Employee;
+Employee* bob = new Employee;
+Customer* acme = new Customer;
+Person* charlie = new Person;
+Business* delta =new Business;
+Detail* fred=nullptr;
+
+alice = bob;
+charlie = alice; // Slicing!!
+fred = charlie; // Slicing!!
+delta = acme; // Slicing!!
+fred = delta; // Slicing!!
 ```
 but not
 ```c++
@@ -281,7 +297,7 @@ The final Inheritance code in the simplified world is
 class Id
 {
 pubilc:
-  int value(){return id_};
+  int value(){return id_;};
 private:
   int id_;
 };
@@ -299,7 +315,7 @@ class Address
 public:
 	std::string value(){return address_;}
 private:
-std_string address_;
+	std::string address_;
 };
 
 
@@ -552,7 +568,7 @@ template < typename T>
 class Id
 {
 pubilc:
-  int value(){return id_};
+  int value(){return id_;};
 private:
   int id_;
 };
@@ -572,7 +588,7 @@ class Address
 public:
 	std::string value(){return address_;}
 private:
-std_string address_;
+	std::string address_;
 };
 ```
 
@@ -609,7 +625,7 @@ template < typename T>
 class Id
 {
 pubilc:
-  int value(){return id_};
+  int value(){return id_;};
 private:
   int id_;
 };
@@ -629,7 +645,7 @@ class Address
 public:
 	std::string value(){return address_;}
 private:
-std_string address_;
+	std::string address_;
 };
 }
 

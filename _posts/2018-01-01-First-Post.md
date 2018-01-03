@@ -119,19 +119,23 @@ struct Business : public Details
 Again we have minimized the code but now we have linked four types that may in fact have no connection. Employee, Customer, Person and Business all derive from Details so we can have
 
 ```c++
+Employee* alice = new Employee;
+Employee* bob = new Employee;
+Customer* acme = new Customer;
+Person* charlie = new Person;
+Business* delta =new Business;
+
+*alice = *bob = *acme = *charlie = *delta; // Warning Slicing!!
+```
+
+or
+
+```c++
 Employee alice;
 Employee bob;
 Customer acme;
 Person charlie;
 Business delta;
-```
-and we can write
-
-```c++
-alice = bob = acme = charlie = delta; // Warning Slicing!!
-
-or
-
 alice.id = bob.id = acme.id = charlie.id = delta.id;
 ```
 which is not particularly Type Safe.
@@ -221,7 +225,8 @@ class Employee :: public Person
 
 but we can still write
 ```c++
-alice = bob = acme = charlie = delta; // Warning Slicing!!
+*alice = *bob = *acme = *charlie = *delta; // Warning Slicing!!
+
 ```
 but not
 ```c++

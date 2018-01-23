@@ -164,7 +164,7 @@ target_include_directories(
   PUBLIC
   ${include_dirs}
   ${support_dir})
-``
+```
 
 and if everything is correct it should compile to produce a library file (*.so) in the app/build/intermediates/cmake/debug/obj/armeabi-v7a/ directory.
 

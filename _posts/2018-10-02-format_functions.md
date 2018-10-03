@@ -32,14 +32,14 @@ return hours_minutes(get_time(date_time));
 }
 ```
 
-Then we want am/pm format.
+Then we want an am/pm format.
 
 ```c++
 std::string hours_minutes_ampm( Time); // returns "hh:mm am/pm"
 std::string hours_minutes_ampm( Date_Time); // returns "hh:mm am/pm" of Time portion
 ```
 
-And then we want another format with spaces and letter format.
+And then we want another format with spaces and letters.
 
 ```c++
 std::string hours_minutes_spaced( Time); // returns "hhH mmM"
@@ -84,7 +84,7 @@ std::string hours_minutes( Date_Time); // returns "hh:mm am/pm" of Time portion
 
 ```
 
-Now we have obviously to write a new definition for the Time version of the function but the Date_Time version definition is exactly the same as it just calles the Time version in the same namespace.
+Now we have obviously to write a new definition for the Time version of the function but the Date_Time version definition is exactly the same as it just calles the Time version in the same namespace so it is just a copy.
 
 Similarly we can add the spaced versions by adding the namespace, copying and editing one definition
 
@@ -112,7 +112,7 @@ std::string hours_minutes( Date_Time); // returns "hhH mmM" of Time portion
 
 ```
 
-Obviously we want to use these function in other code and when we do we just use the namespace to specify which
+Obviously we want to use these functions in other code and when we do we just use the namespace to specify which
 ```c++
 auto string = time::hours_minutes(time); // the default format
 auto string = time::ampm::hours_minutes(time); // the am/pm format
@@ -155,9 +155,9 @@ std::string hours_minutes( Date_Time); // returns "hhH mmM" of Time portion
 
 And if we use some form of intelisense, as we type, we are offered more details versions of the formatting as we go.
 
-The takeaways here is that using namespaces to name repeated versions of functions both introduces a disipline to the naming of the functions and, as with other uses of namespace, also allows repeated code to be simply reused. Yes there are duplicate (Date_Time) functions required in each namespace but this is not any different from what similar generic template code does under the covers.
+The takeaways here is that using namespaces to name repeated versions of functions both introduces a disipline to the naming of the functions and, as with other uses of namespaces, also allows repeated code to be simply reused. Yes there are duplicate (Date_Time) functions required in each namespace but this is not any different from what similar generic template code does under the covers.
 
-Templates just generate an instance of a function for the  different parameter requirements. Here we are just doing it explicitly and then letting the linker remove the versions that are not used. The size of the code is similar and without the header/compilation overhead of the templates. ( This is someting I think I need to explore in another post. Note to self can you constexpr template?)
+Templates just generate an instance of a function for the  different parameter requirements. Here we are just doing it explicitly and then letting the linker remove the versions that are not used. The size of the code is similar and without the header/compilation overhead of the templates. ( This is someting I think I need to explore in another post.)
 
 Finally there is the question of whether this sort of code structure is even possible with templates.
 

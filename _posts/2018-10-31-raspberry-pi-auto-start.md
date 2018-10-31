@@ -53,3 +53,6 @@ Do a chmod +x and then run
 
 sudo update-rc.d ### file_name ### defaults
 
+Note that for some reason yet to be determined once started this way the init script must be used else the configuration files may not be recognized.
+
+

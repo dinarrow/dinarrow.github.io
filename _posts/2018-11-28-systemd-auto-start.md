@@ -55,8 +55,6 @@ Note to remove a service
 ```
 systemctl stop [servicename]
 systemctl disable [servicename]
-rm /etc/systemd/system/[servicename]
-rm /etc/systemd/system/[servicename] symlinks that might be related
 systemctl daemon-reload
-systemctl reset-failed
 ```
+Note if the service was not setup with the above methods further actions may be required

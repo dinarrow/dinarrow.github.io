@@ -2,7 +2,7 @@
 theme: jekyll-theme-hacker
 layout: default
 title: Systemd Service Setup
-date: 2018-10-11  00:00:00
+date: 2018-11-28  00:00:00
 ---
 
 # Systemd Service Setup

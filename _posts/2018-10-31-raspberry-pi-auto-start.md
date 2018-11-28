@@ -7,6 +7,12 @@ date: 2018-10-30  00:00:00
 
 # Raspberry Pi Auto Start
 
+DON'T DO THIS
+
+While in theory the init.d (SystemV) can work the Pi has switched to systemd.
+
+Use the methods in ["Systemd Service Setup"](systemd-auto-start.html)
+
 Raspian is a version linux so this is just the specific auto-start method used
 
 A file is required in /etc/init.d like this

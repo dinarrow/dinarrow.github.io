@@ -31,23 +31,23 @@ Alias=master.service
 chmod +x ./master.service
 ```
 
-then as root, enable using systemctrl to register the service (including necessary sysmbolic links)
+then as root, enable using systemctl to register the service (including necessary sysmbolic links)
 
 ```
-sudo systemctrl enable /home/user/service/master.service
+sudo systemctl enable /home/user/service/master.service
 
 ```
 Note full file path.
 
 then reload daemons
 ```
-systemctl daemon-reload
+sudo systemctl daemon-reload
 ```
 
 Finally start
 
 ```
-sudo systemctrl start master.service
+sudo systemctl start master.service
 ```
 
 Note to remove a service

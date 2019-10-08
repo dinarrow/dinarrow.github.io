@@ -1,7 +1,7 @@
 ---
 theme: jekyll-theme-hacker
 layout: default
-title: QML Notes
+title: HP Pavillion 15 Freeze Fix
 date: 2019-09-29  00:00:00
 ---
 

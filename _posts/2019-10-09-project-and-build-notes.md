@@ -102,3 +102,5 @@ The source of the repository will be the root directory ( .git directory locatio
 Build, data and library directories should be generally ignored as these contain either dynamic material or material sourced elsewhere ( other Git repositories). However certain files in those directories ( scripts for example) can be forced into the repository as required.
 
 Note that including cloned repositories as Sub-repositories in the main Git is avoided unless the main repository is to be publicly publish and/or the relationship between various versions and branches need to be maintained. Otherwise it is simpler on a project moving in the forward direction to manually push the cloned repositories as and (only) when required to limit any effect external changes may have.
+
+Finally it can be an advantage to set up special branches in the repository that contain a subset of directory/file structure. For example a Document Branch can be declared with documentation material only being committed via this branch. This allows the documents to be pulled into other branches or published separately without the overhead and effects of the individual branch variations.

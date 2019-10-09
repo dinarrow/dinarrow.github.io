@@ -97,6 +97,8 @@ Also in a large project the root directory may have material common to more than
 
 Overlaying the directory structure for both small and large projects there will obviously be a repository of some form for backup, branching etc. This will generally be Git.
 
-The source of the repository will be the root directory ( .git directory location). Build, data and library directories should be generally ignored as these contain either dynamic material or material sourced elsewhere ( other Git repositories). However certain files in those directories ( scripts for example) can be forced into the repository as required.
+The source of the repository will be the root directory ( .git directory location).
 
-Note that including cloned repositories as Sub-repositories in the main Git is avoided unless the main repository is to be publicly publish and the relationship between various versions and branches need to be maintained. Otherwise it is simpler to manually push the cloned repositories as and (only) when required to limit any effect external changes may have.
+Build, data and library directories should be generally ignored as these contain either dynamic material or material sourced elsewhere ( other Git repositories). However certain files in those directories ( scripts for example) can be forced into the repository as required.
+
+Note that including cloned repositories as Sub-repositories in the main Git is avoided unless the main repository is to be publicly publish and/or the relationship between various versions and branches need to be maintained. Otherwise it is simpler on a project moving in the forward direction to manually push the cloned repositories as and (only) when required to limit any effect external changes may have.

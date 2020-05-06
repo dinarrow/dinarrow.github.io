@@ -10,10 +10,12 @@ date: 2018-11-28  00:00:00
 Create a unit file with the extention .service somewhere in the file system.
 
 Example: master.service
+[2020-05-06] Added StartLimitIntervalSec to ensure restart
 ```
 [Unit]
 Description=Master Relay
 Requires=network.target
+StartLimitIntervalSec=0
 
 [Service]
 Type=simple

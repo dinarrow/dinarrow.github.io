@@ -9,17 +9,188 @@ date: 2020-08-22  00:00:00
 
 This relates back to my first post ["Reducing  Inheritance ( and code) with Type Safety using Namespaces"](First-Post.html) and a follow up [Type Safety and Simplicity](2018-09-10-type_safety_and_simplicity.html).
 
-In the latter I looked at Templates and Generic Code and found them wanting outside the trivial and in Libraries suich as the STL. I took this position based in part on the confusion that resulted from the complex error messages, particularly in the case of junior programmers and those inecperienced with the code. 
+In the latter I looked at Templates and Generic Code and found them wanting outside the trivial and in Libraries such as the STL. I took this position based in part on the confusion that resulted from the complex error messages, particularly in the case of junior programmers and those inexperienced with the code. 
 
-I attempted to demonstrate that using Namespaces, Strong Typing and Included Code Files could be used to produce more readable and understandable code that could be understood locally and modified without significant and possibly unknown side effects.
+I attempted to demonstrate that using Namespaces, Strong Typing and Included Code Files could be used to produce more readable and understandable code that could be absorbed? locally and modified without significant and possibly unknown side effects.
 
 In this post, now almost two years later, I will give a real world example of these concepts in action and at the same time demonstrate how the can be used along side Templates and Generic Code in a cooperative manner.
 
 
+## Schema
+
+Consider an SQL Table Schema for Personal Details such as this
+
+```SQL
+
+TABLE PersonalDetails 						-- ACTIONS: UPDATE ONLY										
+	operID int NOT NULL,					-- The record ID from server 
+	operName varchar(250) NOT NULL,			-- RO		The operators mobile login name
+	operMobile varchar(50) NULL,			-- UPD 		Operators mobile number
+	operFullName varchar(255) NULL,			-- UPD 		Full name
+	operPhone varchar(20) NULL,				-- UPD 		Home phone number
+	operEmail varchar(100) NULL,			-- UPD 		Personal email address
+	operAddress varchar(255) NULL,			-- UPD 		Home address
+	operPostal varchar(255) NULL,			-- UPD 		Postal address
+	operPartnerName varchar(100) NULL,		-- UPD 		Partners name (or next of Kin)
+	operPartnerPhone varchar(50) NULL,		-- UPD 		Partners phone
+	operEmergencyName varchar(100) NULL,	-- UPD 		Emergency contact person
+	operEmergencyPhone varchar(50) NULL,	-- UPD 		Emergency contact number/s
+	operStatus varchar(10) NOT NULL,		-- RO 		Employment status
+	operLicenses varchar(50) NULL,			-- RO 		Driver licence classes
+	operStartDate varchar(10) NULL,			-- RO 		Date started work
+	operKiwisaver bit NULL,					-- RO 		Belongs to Kiwisaver
+	operIRDNumber varchar(20) NULL,			-- RO 		IRD number
+	operLicenceNumber varchar(30) NULL,		-- RO 		Driver licence number
+	operLicenceVers varchar(30) NULL,		-- RO 		Licence version number
+	operBirthDate varchar(10) NULL,			-- RO 		DOB
+	Team varchar(250) NOT NULL,				-- RO 		GAVINS team 
+	Exemption varchar(250) NOT NULL			-- RO 		Any current truck driver exemption
 
 
+```
 
+Note that this is from a real example so there are some details such as naming conventions and columns that are not relevant to this discussion and will be ignored.
 
+## Forward Declarations
+
+The first step is to Forward Declare a Type for each column of the Schema in an appropriate Namespace. The reason for using Forward Declaration is limit the compilation overhead and declaration complexity that results from including headers within headers. By limiting the full declaration of Classes to headers in the Translation Unit Files (*.cpp) the required header for each Unit is clearer and more stable, not requiring includes that bleed through the header files.
+
+```c++
+  namespace personal_ns::details_ns
+  {
+    class Class;
+    class Id;
+    using Vector = std::vector<Class>;
+    namespace name_ns
+    {
+      namespace name_ns
+      {
+        class Class;
+      } // namespace name_ns
+      using Name = name_ns::Class;
+      namespace full_ns
+      {
+        class Class;
+      } // namespace full_ns
+      using Full = full_ns::Class;
+    } // namespace name_ns
+    namespace phone_ns
+    {
+      class Class;
+    } // namespace phone_ns
+    using Phone = phone_ns::Class;
+    namespace mobile_ns
+    {
+    } // namespace mobile_ns
+    using Mobile = mobile_ns::Class;
+    namespace email_ns
+    {
+      class Class;
+    } // namespace email_ns
+    using Email = email_ns::Class;
+    namespace address_ns
+    {
+      namespace physical_ns
+      {
+        class Class;
+      } // namespace physical_ns
+      using Physical = physical_ns::Class;
+      namespace postal_ns
+      {
+        class Class;
+      } // namespace postal_ns
+      using Postal = postal_ns::Class;
+    } // namespace address_ns
+    namespace partner_ns
+    {
+      namespace name_ns
+      {
+        class Class;
+      } // namespace name_ns
+      using Name = name_ns::Class;
+      namespace phone_ns
+      {
+        class Class;
+      } // namespace phone_ns
+      using Phone = phone_ns::Class;
+    } // namespace partner_ns
+    namespace emergency_ns
+    {
+      namespace name_ns
+      {
+        class Class;
+      } // namespace name_ns
+      using Name = name_ns::Class;
+      namespace phone_ns
+      {
+        class Class;
+      } // namespace phone_ns
+      using Phone = phone_ns::Class;
+    } // namespace emergency_ns
+    namespace status_ns
+    {
+      class Class;
+    } // namespace status_ns
+    using Status = status_ns::Class;
+    namespace licence_ns
+    {
+      namespace licences_ns
+      {
+        class Class;
+      } // namespace licences_ns
+      using Licences = licences_ns::Class;
+      namespace number_ns
+      {
+        class Class;
+      } // namespace number_ns
+      using Number = number_ns::Class;
+      namespace version_ns
+      {
+        class Class;
+      } // namespace version_ns
+      using Version = version_ns::Class;
+    } // namespace licence_ns
+    namespace kiwisaver_ns
+    {
+      class Class;
+    } // namespace kiwisaver_ns
+    using Kiwisaver = kiwisaver_ns::Class;
+    namespace ird_ns
+    {
+      class Class;
+    } // namespace ird_ns
+    using IRD = ird_ns::Class;
+    namespace team_ns
+    {
+      class Class;
+    } // namespace team_ns
+    using Team = team_ns::Class;
+    namespace exemption_ns
+    {
+      class Class;
+    } // namespace exemption_ns
+    using Exemption = exemption_ns::Class;
+    namespace date_ns
+    {
+      namespace start_ns
+      {
+        class Class;
+      } // namespace start_ns
+      using Start = start_ns::Class;
+      namespace birth_ns
+      {
+        class Class;
+      } // namespace birth_ns
+      using Birth = birth_ns::Class;
+      namespace update_ns
+      {
+        class Class;
+      } // namespace update_ns
+      using Update = update_ns::Class;
+    } // namespace date_ns
+
+  } // namespace personal_ns::details_ns
+```
 
 
 Take templates and generic code in general. Templated Generic code is one of the best features of C++. When you read articles and watch videos the power of templates is demostrated and can often seem miraculous when it comes to reducing the amount of code to be written and how much can be reused (ie STL). However to use templates beyond the trivial you rapidly need deep knowledge of how they work and the rules surrounding them particularly when something goes wrong.

@@ -11,7 +11,7 @@ This relates back to my first post ["Reducing  Inheritance ( and code) with Type
 
 In the latter I looked at Templates and Generic Code and found them wanting outside the trivial and in Libraries such as the STL. I took this position based in part on the confusion that resulted from the complex error messages, particularly in the case of junior programmers and those inexperienced with the code. 
 
-I attempted to demonstrate that using Namespaces, Strong Typing and Included Code Files could be used to produce more readable and understandable code that could be absorbed? locally and modified without significant and possibly unknown side effects.
+I attempted to demonstrate that using Namespaces, Strong Typing and Included Code Files could be used to produce more readable and understandable code that could be interperated locally and modified without significant and possibly unknown side effects.
 
 In this post, now almost two years later, I will give a real world example of these concepts in action and at the same time demonstrate how the can be used along side Templates and Generic Code in a cooperative manner.
 
@@ -53,13 +53,13 @@ Note that this is from a real example so there are some details such as naming c
 
 ## Forward Declarations
 
-The first step is to Forward Declare a Class for the Table and Type for each column of the Schema in an appropriate Namespace. The reason for using Forward Declaration is limit the compilation overhead and declaration complexity that results from including headers within headers. By limiting the full declaration of Classes to headers in the Translation Unit Files (*.cpp) the required header for each Unit is clearer and more stable, not requiring includes that bleed through the header files.
+The first step is to Forward Declare a Class for the Table and Type for each column of the Schema in an appropriate Namespace. The reason for using Forward Declarations is  to limit the compilation overhead and declaration complexity that results from including headers within headers. By limiting the full declaration of Classes to headers in the Code Files (*.cpp) or Translation Unit the required header for each file is clearer and more stable, not requiring includes that bleed through the header files.
 
 The declaration begins with the Table Class itself and some associated housekeeping classes Id and Vector. Since all Table Classes have an Id with consistent characteristic a separate namespace is not required.
 
-For the remaining columns each get a unique namespace laied out in a tree structure where they have common characteristics for example emergency_ns. The _ns extension to the namespaces is used to avoid conflict with other names and keywords like operator, or class.
+For the remaining columns each get a unique namespace laid out in a tree structure where they have common characteristics for example emergency_ns. The _ns extension to the namespaces is used to avoid conflict with other names and keywords like operator, or class.
 
-For each Type a using statement allows the class in each case to be used without the repetition of the namespace. This could be extended of course to deeper namespaces provided uniqueness is maintained.
+For each Type a using statement allows the class in each case to be used without the repetition of the namespace. This can be extended to deeper namespaces provided uniqueness is maintained as shown in the last line.
 
 
 ```c++
@@ -200,7 +200,7 @@ For each Type a using statement allows the class in each case to be used without
 using Personal_details = personal_ns::details_ns::Class;
 ```
 
-A significant advantage of doing Forward Declarations is that all Type naming can be located in one file or files with a consistent naming structure
+A significant advantage of doing Forward Declarations is that all Type naming can be located in one file or files with a consistent naming structure as per this example
 ### forward.h
 ```c++
 #include configuration_forward.h
@@ -209,14 +209,14 @@ A significant advantage of doing Forward Declarations is that all Type naming ca
 ```
 ## Header File
 
-Next the Header file. Some irrelevant code is not present but note that the Namespace Structure is repeated and each class is separately defined as
+Next the Header file. Some irrelevant code is not present but note that the Namespace Structure is repeated as in the Forward file and each class is separately defined as
 ```c++
       class Class
       {
 #include "composite_class_declarations.inc"
       };
 ```
-In this example each class declaration simply contains a standardized include file which defines the common charateristics of the class. The reason the class is declared around the include file is that it allows additional class specific methods ( and less common variables) to be added. The details of the added methods and the include files will be discussed later.
+In this example each Type class declaration simply contains a standardized include file which defines the common charateristics of the class. The reason the class is declared around the include file is that it allows additional class specific methods ( and less common variables) to be added. This is shown later in the declaration  of the Table class.
 
 ```c++
 #include "field_values.h"
@@ -558,7 +558,7 @@ Also of note are the static_asserts. These check that the correct number of type
 
 The Table Class is declared much the same way as the Column Types. Here we can see a specialized Class Method being declared to extend the class beyond it standardized common characteristics.
 
-Standardized Free Functions are also declared along with sepecialized Functions. Note that this standardization is only possible due to Namespacing. This allows the functions to be defined in terms of generic values such as Class and Id and therefore be texturally equivalent. This is an alternative method of generic programming that avoid some of the issues of Templates like long an complicated error messages. However, although errors can be short and clear, their location can be differcult to find and compilers and IDEs do not understand the include file structure. There are meta techniques that can be used to mitigate some of this but they are beyond the scope of the current discussion.
+Standardized Free Functions are also declared along with sepecialized Functions. Note that this standardization is only possible due to Namespacing. This allows the functions to be defined in terms of generic names such as Class and Id and therefore be texturally equivalent. This is an alternative method of generic programming that avoid some of the issues of Templates like long an complicated error messages. However, although errors can be short and clear, their location can be differcult to find as compilers and IDEs do not understand the include file structure. There are meta techniques that can be used to mitigate some of this but they are beyond the scope of the current discussion.
 
 ```c++
   class Class
@@ -575,11 +575,11 @@ Standardized Free Functions are also declared along with sepecialized Functions.
 
 ## Code File
 
-The Code File is again shown largely in full but has some features not relevant to the discussion and those details will be ignored.
+The Code File is again shown largely in full but, as can be expected, has many features not relevant to the discussion and those details will be ignored.
 
-The Column Types are defined in much that same way as they were declared in the  Header file using standardized include files. Note that this significaly reduces the line count of the Code File while maintaining basic dicriptive information in the include file names.
+The Column Types are defined in much that same way as they were declared in the  Header file using standardized include Definition files. Note that this significaly reduces the line count of the Code File while maintaining basic discriptive information in the include file names.
 
-Otherwise the most significant point of interest is the Class Method and how it is used to access Data.
+Otherwise the most significant point of interest is the Class Method and how it is used to access data.
 
 ```c++
 #include "personal_details.h"
@@ -738,9 +738,10 @@ namespace gavops_ns::personal_ns::details_ns
 
 Accessing Data is possible in a number of ways due the use of Tuples and Unique Types.
 
-In the Class Method above data is accessed in a traditional way by using a function to read ( and a function to write) to each data field.
+In the Class Method above data is accessed in a traditional way by using a function to read ( and a function to write) to each data field ( getters and setters).
 ```c++
 	auto value = instance.method();
+	instance.method(value);
 ```
 This however requires at least one function per column to read, in this example 23 functions, and one per column to write where required ( potentially another 23) that are largely repedative boilerplate.
 
@@ -748,7 +749,7 @@ In the definition of the above Team Method
 ```c++
   Team Class::team() const { return get<Team>(); }
 ```
-it can be seen that it is expressed in terms of a get Template and this is an alternative was to access data.
+it can be seen that it is expressed in terms of a get Template function and this is an alternative way to access data.
 
 ```c++
 	auto value = instance.get<Type>();
@@ -765,12 +766,12 @@ However in this case if the value is itself Strongly Typed typing is more often 
 	Type value;
     instance.set(value);
 ```
-Further get function is possible
+Further  a get function is possible
 
 ```c++
 	Type value = instance.get(value);
 ```
-In this case the additional function parameter is used solely to determine the Type and this is equally possible
+Here the additional function parameter is used solely to determine the Type and this is equally possible
 ```c++
 	Type type_example;
 	Type value = instance.get(type_example);
@@ -778,16 +779,19 @@ In this case the additional function parameter is used solely to determine the T
 
 A significant benefit of using the get/set functions is that it encourages the use on Strong Typing in other parts of the code resulting in a style where primitive and ambiguous type ( int, double, std::string) are used for calculation and/or efficiency reasons only and are converted to strong types as soon as possible. This helps avoid the clasical issues of mis-ordered or mis-understood variables being used.
 
-Further it is possible to write both the following
+Note that this does not mean that getters and setters will never be written. In the example above the Team method was written because some of the locations it was called required the full Namespace to be written each time. Using the Class Method Arguement Dependent Lookup (ADL) allows the correct function to be located based on the class. This need is however mitigated by the following.
+
+It is also possible to write both the following
 
 ```c++
 	Type value = instance;
 ...
     instance=value;
 ```
-This is because the instance (Class) and only one Data value of the Type so the get/set methods required can be automatically determined. This can significantly reduce both the typing required and functions to be remember. Once the value it typed no further specialized functions are required to read or write data.
+This is because the instance (Class) has only one Data value of the Type so the get/set methods required can be automatically determined via ADL. This can significantly reduce both the typing (keystrokes) required and the number of specific functions to be remembered. Once the value it typed no further specialized functions are required to read or write data.
 
-Finally this can be extended to other operators
+
+Finally this feature can be extended to other operators
 ```c++
 	Type value;
 	value == instance;

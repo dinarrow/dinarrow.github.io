@@ -197,6 +197,7 @@ For each Type a using statement allows the class in each case to be used without
     } // namespace date_ns
 
   } // namespace personal_ns::details_ns
+using Personal_details = personal_ns::details_ns::Class;
 ```
 
 A significant advantage of doing Forward Declarations is that all Type naming can be located in one file or files with a consistent naming structure
@@ -485,7 +486,6 @@ namespace personal_ns::details_ns
 
   Class registed_user_details();
   // <-- free functions
-#include "composite_test_data_declarations.inc"
 } // namespace gavops_ns::personal_ns::details_ns
 
 ```
@@ -528,10 +528,278 @@ struct Field
 };
 ```
 
-The values in Field siomply reflect the characteristics of the column necessary for it to interact with the underlying SQL tables.
+The values in Field simply reflect the characteristics of the column necessary for it to interact with the underlying SQL tables.
+
+Note that the order of the Fields is technically not important but in this real world case MUST match the order of the Columns. This is due to the way the persistent storage of data (files) works in this example where order must be maintained.
 
 A static constexpr instance of Fields is then defined (fields) and a Field instance created for each column. Note that as this is the only place that a Field is defined this construction is done at compile time (constexpr) and std::string_view can be used to connect to the string literals.
 
 Note also that the intermingling of the instance definitions and the comments ( the original schema) allows a direct association between the Column Descriptions and Field Definitions. Historically this has been a common error source since the schema itself has no real meaning in code. The close coupling help to ensure that spelling etc. can be easily checked and updated.
 
+### Data Tuple
 
+A Data Tuple (Tuple) is now defined. This is used to contain the actual Table and Column data, a Record in effect. It simply has template parameter that agree with the Columns in the Table. ORDER is important here but ONLY here. The order of the Type must match the order of the Fields so the Column characteristic match to the correct Type.
+
+```c++
+  using Tuple = std::tuple<Alt_id, Id, name_ns::Name, Mobile, name_ns::Full, Phone, Email,
+                           address_ns::Physical, address_ns::Postal, partner_ns::Name,
+                           partner_ns::Phone, emergency_ns::Name, emergency_ns::Phone, Status,
+                           licence_ns::Licences, date_ns::Start, Kiwisaver, IRD, licence_ns::Number,
+                           licence_ns::Version, date_ns::Birth, Team, Exemption, date_ns::Update>;
+  static_assert(std::tuple_size<Tuple>::value == 24);
+  static_assert(std::tuple_size<Tuple>::value == std::tuple_size<Fields>::value);
+```
+
+At this point it may be questioned as to why two Tuples have been defined instead of a single Tuple for Field Characteristics and Data. The reason is Foreign Key columns. This will be discussed later but while this example has no Foreign Keys, when they exist the have different Field Characteristics in different Namespaces (Tables). Allowing different characteristics in different namespaces allows the same Type to be used in all instances which in turn allows Type features like equality to be maintained.
+
+Also of note are the static_asserts. These check that the correct number of types are in the Data Tuple and that a matching number of Fields are defined. This is another historically common error source particularly when modifying a Table Schema. If either of these assertions fail the code will not compile.
+
+### Table Class and Free Function Declarations
+
+The Table Class is declared much the same way as the Column Types. Here we can see a specialized Class Method being declared to extend the class beyond it standardized common characteristics.
+
+Standardized Free Functions are also declared along with sepecialized Functions. Note that this standardization is only possible due to Namespacing. This allows the functions to be defined in terms of generic values such as Class and Id and therefore be texturally equivalent. This is an alternative method of generic programming that avoid some of the issues of Templates like long an complicated error messages. However, although errors can be short and clear, their location can be differcult to find and compilers and IDEs do not understand the include file structure. There are meta techniques that can be used to mitigate some of this but they are beyond the scope of the current discussion.
+
+```c++
+  class Class
+  {
+#include "composite_class_declarations.inc"
+    Team team() const;
+  };
+// --> free functions
+#include "composite_free_function_declarations.inc"
+
+  Class registed_user_details();
+  // <-- free functions
+```
+
+## Code File
+
+The Code File is again shown largely in full but has some features not relevant to the discussion and those details will be ignored.
+
+The Column Types are defined in much that same way as they were declared in the  Header file using standardized include files. Note that this significaly reduces the line count of the Code File while maintaining basic dicriptive information in the include file names.
+
+Otherwise the most significant point of interest is the Class Method and how it is used to access Data.
+
+```c++
+#include "personal_details.h"
+
+namespace gavops_ns::personal_ns::details_ns
+{
+  namespace // internal linkage
+  {
+  } // namespace
+  namespace name_ns
+  {
+    namespace name_ns
+    {
+#include "composite_string_class_definitions.inc"
+    } // namespace name_ns
+    namespace full_ns
+    {
+#include "composite_string_class_definitions.inc"
+    } // namespace full_ns
+  }   // namespace name_ns
+  namespace phone_ns
+  {
+#include "composite_string_class_definitions.inc"
+  } // namespace phone_ns
+  namespace mobile_ns
+  {
+#include "composite_string_class_definitions.inc"
+  } // namespace mobile_ns
+  namespace email_ns
+  {
+#include "composite_string_class_definitions.inc"
+  } // namespace email_ns
+  namespace address_ns
+  {
+    namespace physical_ns
+    {
+#include "composite_string_class_definitions.inc"
+    } // namespace physical_ns
+    namespace postal_ns
+    {
+#include "composite_string_class_definitions.inc"
+    } // namespace postal_ns
+  }   // namespace address_ns
+  namespace partner_ns
+  {
+    namespace name_ns
+    {
+#include "composite_string_class_definitions.inc"
+    } // namespace name_ns
+    namespace phone_ns
+    {
+#include "composite_string_class_definitions.inc"
+    } // namespace phone_ns
+  }   // namespace partner_ns
+  namespace emergency_ns
+  {
+    namespace name_ns
+    {
+#include "composite_string_class_definitions.inc"
+    } // namespace name_ns
+    namespace phone_ns
+    {
+#include "composite_string_class_definitions.inc"
+    } // namespace phone_ns
+  }   // namespace emergency_ns
+  namespace status_ns
+  {
+#include "composite_string_class_definitions.inc"
+  } // namespace status_ns
+  namespace licence_ns
+  {
+    namespace licences_ns
+    {
+#include "composite_string_class_definitions.inc"
+    } // namespace licences_ns
+    namespace number_ns
+    {
+#include "composite_string_class_definitions.inc"
+    } // namespace number_ns
+    namespace version_ns
+    {
+#include "composite_string_class_definitions.inc"
+    } // namespace version_ns
+  }   // namespace licence_ns
+  namespace kiwisaver_ns
+  {
+#include "composite_bool_class_definitions.inc"
+  } // namespace kiwisaver_ns
+  namespace ird_ns
+  {
+#include "composite_string_class_definitions.inc"
+  } // namespace ird_ns
+  namespace team_ns
+  {
+#include "composite_string_class_definitions.inc"
+  } // namespace team_ns
+  namespace exemption_ns
+  {
+#include "composite_string_class_definitions.inc"
+  } // namespace exemption_ns
+  namespace date_ns
+  {
+    namespace start_ns
+    {
+#include "composite_optional_date_class_definitions.inc"
+    } // namespace start_ns
+    namespace birth_ns
+    {
+#include "composite_optional_date_class_definitions.inc"
+    } // namespace birth_ns
+    namespace update_ns
+    {
+#include "composite_optional_date_class_definitions.inc"
+    } // namespace update_ns
+  }   // namespace date_ns
+
+  namespace callbacks
+  {
+#include "composite_callbacks_change_definitions.inc"
+  } // namespace callbacks
+#include "composite_insert_names_definitions.inc"
+  namespace persistent
+  {
+#include "persistent_set_clause_templates.inc"
+#include "persistent_struct_definition.inc"
+    namespace // internal linkage
+    {
+      table::Table const &table_values() { return table::personal::details::table_values; }
+    } // namespace
+#include "persistent_dec_defs.inc"
+  } // namespace persistent
+#include "composite_id_definitions.inc"
+#include "persistent_set_clause_data_templates.inc"
+  class Class::Data
+  {
+#include "persistent_class_data.inc"
+  };
+
+#include "composite_class_definitions.inc"
+  Team Class::team() const { return get<Team>(); }
+
+#include "composite_free_function_definitions.inc"
+  Class registed_user_details()
+  {
+    auto id = configure::registered_user_value();
+    Class instance;
+    instance.data().dp(persistent::map()[id]);
+    instance.load_from_dp();
+    return instance;
+  }
+  // <-- free functions
+} // namespace personal_ns::details_ns
+```
+
+## Accessing Data
+
+Accessing Data is possible in a number of ways due the use of Tuples and Unique Types.
+
+In the Class Method above data is accessed in a traditional way by using a function to read ( and a function to write) to each data field.
+```c++
+	auto value = instance.method();
+```
+This however requires at least one function per column to read, in this example 23 functions, and one per column to write where required ( potentially another 23) that are largely repedative boilerplate.
+
+In the definition of the above Team Method
+```c++
+  Team Class::team() const { return get<Team>(); }
+```
+it can be seen that it is expressed in terms of a get Template and this is an alternative was to access data.
+
+```c++
+	auto value = instance.get<Type>();
+```
+Because each Type in the Class/Data Tuple is unique the correct value required can be indentified by the Type alone. Thus the need for boilerplate Class Methods is eliminated at the expense of possibly more characters type at call time. However the additional typing is offset by the clarity of the actual Type being used.
+
+Similarly there is an equivalent set functions with additional typing.
+```c++
+	auto value;
+    instance.set<Type>(value);
+```
+However in this case if the value is itself Strongly Typed typing is more often reduced.
+```c++
+	Type value;
+    instance.set(value);
+```
+Further get function is possible
+
+```c++
+	Type value = instance.get(value);
+```
+In this case the additional function parameter is used solely to determine the Type and this is equally possible
+```c++
+	Type type_example;
+	Type value = instance.get(type_example);
+```
+
+A significant benefit of using the get/set functions is that it encourages the use on Strong Typing in other parts of the code resulting in a style where primitive and ambiguous type ( int, double, std::string) are used for calculation and/or efficiency reasons only and are converted to strong types as soon as possible. This helps avoid the clasical issues of mis-ordered or mis-understood variables being used.
+
+Further it is possible to write both the following
+
+```c++
+	Type value = instance;
+...
+    instance=value;
+```
+This is because the instance (Class) and only one Data value of the Type so the get/set methods required can be automatically determined. This can significantly reduce both the typing required and functions to be remember. Once the value it typed no further specialized functions are required to read or write data.
+
+Finally this can be extended to other operators
+```c++
+	Type value;
+	value == instance;
+    instance < value;
+    instance += value;
+```
+Note that the get/set and operator functions are all implemented using Template defined in the Include Files and can thus be made to "just work" without any addional and/or confusing code being written by the programmer.
+
+## Conclusion
+
+I hope I have shown that by using Strong Typing, Code Include Files and judisious use of Templates code can be written that is clearer to read and understand with significant reductions in the required typing (keystrokes)  and overall number of (visible) lines. While I have not explained in detail how this is achieved ( a later post perhaps) the resulting code should be easier to maintain with specialization being clearly expressed as differences from the standardized Include Files.
+
+Further the Forward, Header and Code file structure has significant advantages in localizing coding details into specific locations making tracing of Declarations and Definitions easier.
+
+Finally, although it may be possible to similar genetic programming using Templates alone at a minimum it would requires much more of the code to live in the Header files with the consequencial longer compile times and risks of naming conflict. ( The only way I have thought that this could be done is by replacing all the namespaces with classes that are then used in the Templates to determine the Type structure. However even if this is possible it would require the exposure of many more lines of code and almost inevitable the use of Inheritance, Virtual Functions and Template specializations all of which make the code harder to understand, debug, and localize.)

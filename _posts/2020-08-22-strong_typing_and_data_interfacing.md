@@ -409,64 +409,68 @@ namespace personal_ns::details_ns
   // Field Structure
   // Field{"name",is_insert,read_only,is_required,"default_value"},
 
-  using Fields = std::tuple<Field, Field, Field, Field, Field, Field, Field, Field, Field, Field,
-                            Field, Field, Field, Field, Field, Field, Field, Field, Field, Field,
-                            Field, Field, Field, Field>;
+  using Fields = std::tuple<Field<Alt_id>, Field<Id>, Field<name_ns::Name>, Field<Mobile>, Field<name_ns::Full>, Field<Phone>, Field<Email>,
+                           Field<address_ns::Physical>, Field<address_ns::Postal>, Field<partner_ns::Name>,
+                           Field<partner_ns::Phone>, Field<emergency_ns::Name>, Field<emergency_ns::Phone>, Field<Status>,
+                           Field<licence_ns::Licences>, Field<date_ns::Start>, Field<Kiwisaver>, Field<IRD>, Field<licence_ns::Number>,
+                           Field<licence_ns::Version>, Field<date_ns::Birth>, Field<Team>, Field<Exemption>, Field<date_ns::Update>>;
   static constexpr Fields fields{
       // TABLE PersonalDetails 						-- ACTIONS: UPDATE ONLY
-      Field{"alt_id", false, true, true, ""},
+      Field<Alt_id>{"alt_id", false, true, false, ""},
       //	operID int NOT NULL,					-- The record ID from server
-      Field{"operID", false, true, true, ""},
+      Field<Id>{"operID", false, true, true, ""},
       //	operName varchar(250) NOT NULL,			-- RO		The operators mobile
       // login name
-      Field{"operName", true, true, true, ""},
+      Field<name_ns::Name>{"operName", true, true, true, ""},
       //	operMobile varchar(50) NULL,			-- UPD 		Operators mobile
       // number
-      Field{"operMobile", false, false, false, ""},
+      Field<Mobile>{"operMobile", false, false, false, ""},
       //	operFullName varchar(255) NULL,			-- UPD 		Full name
-      Field{"operFullName", false, false, false, ""},
+      Field<name_ns::Full>{"operFullName", false, false, false, ""},
       //	operPhone varchar(20) NULL,				-- UPD Home phone number
-      Field{"operPhone", false, false, false, ""},
+      Field<Phone>{"operPhone", false, false, false, ""},
       //	operEmail varchar(100) NULL,			-- UPD 		Personal email
       // address
-      Field{"operEmail", false, false, false, ""},
+      Field<Email>{"operEmail", false, false, false, ""},
       //	operAddress varchar(255) NULL,			-- UPD 		Home address
-      Field{"operAddress", false, false, false, ""},
+      Field<address_ns::Physical>{"operAddress", false, false, false, ""},
       //	operPostal varchar(255) NULL,			-- UPD 		Postal address
-      Field{"operPostal", false, false, false, ""},
+      Field<address_ns::Postal>{"operPostal", false, false, false, ""},
       //	operPartnerName varchar(100) NULL,		-- UPD 		Partners name (or
       // next of Kin)
-      Field{"operPartnerName", false, false, false, ""},
+      Field<partner_ns::Name>{"operPartnerName", false, false, false, ""},
       //	operPartnerPhone varchar(50) NULL,		-- UPD 		Partners phone
-      Field{"operPartnerPhone", false, false, false, ""},
+      Field<partner_ns::Phone>{"operPartnerPhone", false, false, false, ""},
       //	operEmergencyName varchar(100) NULL,	-- UPD 		Emergency contact person
-      Field{"operEmergencyName", false, false, false, ""},
+      Field<emergency_ns::Name>{"operEmergencyName", false, false, false, ""},
       //	operEmergencyPhone varchar(50) NULL,	-- UPD 		Emergency contact number/s
-      Field{"operEmergencyPhone", false, false, false, ""},
+      Field<emergency_ns::Phone>{"operEmergencyPhone", false, false, false, ""},
       //	operStatus varchar(10) NOT NULL,		-- RO 		Employment status
-      Field{"operStatus", false, true, true, ""},
+      Field<Status>{"operStatus", false, true, true, ""},
       //	operLicenses varchar(50) NULL,			-- RO 		Driver licence
       // classes
-      Field{"operLicenses", false, true, false, ""},
+      Field<licence_ns::Licences>{"operLicenses", false, true, false, ""},
       //	operStartDate varchar(10) NULL,			-- RO 		Date started work
-      Field{"operStartDate", false, true, false, ""},
+      Field<date_ns::Start>{"operStartDate", false, true, false, ""},
       //	operKiwisaver bit NULL,					-- RO Belongs to Kiwisaver
-      Field{"operKiwisaver", false, true, false, ""},
+      Field<Kiwisaver>{"operKiwisaver", false, true, false, ""},
       //	operIRDNumber varchar(20) NULL,			-- RO 		IRD number
-      Field{"operIRDNumber", false, true, false, ""},
+      Field<IRD>{"operIRDNumber", false, true, false, ""},
       //	operLicenceNumber varchar(30) NULL,		-- RO 		Driver licence
       // number
-      Field{"operLicenceNumber", false, true, false, ""},
+      Field<licence_ns::Number>{"operLicenceNumber", false, true, false, ""},
       //	operLicenceVers varchar(30) NULL,		-- RO 		Licence version
       // number
-      Field{"operLicenceVers", false, true, false, ""},
+      Field<licence_ns::Version>{"operLicenceVers", false, true, false, ""},
       //	operBirthDate varchar(10) NULL,			-- RO 		DOB
-      Field{"operBirthDate", false, true, false, ""},
+      Field<date_ns::Birth>{"operBirthDate", false, true, false, ""},
       //	Team varchar(250) NOT NULL,				-- RO 		GAVINS team
-      Field{"Team", false, true, false, ""},
+      Field<Team>{"Team", false, true, false, ""},
       //	Exemption varchar(250) NOT NULL			-- RO 		Any current truck
       // driver exemption
-      Field{"Exemption", false, true, false, ""}, Field{"Update", false, true, false, ""}
+      Field<Exemption>{"Exemption", false, true, false, ""}, 
+	  //
+	  Field<date_ns::Update>{"Update", false, true, false, ""}
       //
   };
   using Tuple = std::tuple<Alt_id, Id, name_ns::Name, Mobile, name_ns::Full, Phone, Email,
@@ -496,28 +500,31 @@ After the Column Types have been declared a Field (column) structure is defined 
   // Field Structure
   // Field{"name",is_insert,read_only,is_required,"default_value"},
 
-  using Fields = std::tuple<Field, Field, Field, Field, Field, Field, Field, Field, Field, Field,
-                            Field, Field, Field, Field, Field, Field, Field, Field, Field, Field,
-                            Field, Field, Field, Field>;
+  using Fields = std::tuple<Field<Alt_id>, Field<Id>, Field<name_ns::Name>, Field<Mobile>, Field<name_ns::Full>, Field<Phone>, Field<Email>,
+                           Field<address_ns::Physical>, Field<address_ns::Postal>, Field<partner_ns::Name>,
+                           Field<partner_ns::Phone>, Field<emergency_ns::Name>, Field<emergency_ns::Phone>, Field<Status>,
+                           Field<licence_ns::Licences>, Field<date_ns::Start>, Field<Kiwisaver>, Field<IRD>, Field<licence_ns::Number>,
+                           Field<licence_ns::Version>, Field<date_ns::Birth>, Field<Team>, Field<Exemption>, Field<date_ns::Update>>;
   static constexpr Fields fields{
       // TABLE PersonalDetails 						-- ACTIONS: UPDATE ONLY
-      Field{"alt_id", false, true, true, ""},
+      Field<Alt_id>{"alt_id", false, true, false, ""},
       //	operID int NOT NULL,					-- The record ID from server
-      Field{"operID", false, true, true, ""},
+      Field<Id>{"operID", false, true, true, ""},
       //	operName varchar(250) NOT NULL,			-- RO		The operators mobile
       // login name
-      Field{"operName", true, true, true, ""},
+      Field<name_ns::Name>{"operName", true, true, true, ""},
       //	operMobile varchar(50) NULL,			-- UPD 		Operators mobile
       // number
-      Field{"operMobile", false, false, false, ""},
+      Field<Mobile>{"operMobile", false, false, false, ""},
 //...
 ```
 
-The Tuple consists of a Field for each column in the Table. Note that in this real world case an additional Id (alt_id) was required so there are columns+1 Fields. This is not part of the discussion but has the interesting side effect that the columns start numbering at 1 instead of 0;
+The Tuple consists of a Field for each column in the Table with each Field templated to the Type of a column. Note that in this real world case an additional Id (alt_id) was required so there are columns+1 Fields. This is not part of the discussion but has the interesting side effect that the columns start numbering at 1 instead of 0;
 
-Field is a simple structure defined in field_values.h
+Field is a simple structure Template defined in field_values.h
 
 ```c++
+template<typename T>
 struct Field
 {
   std::string_view column_name;
@@ -538,7 +545,7 @@ Note also that the intermingling of the instance definitions and the comments ( 
 
 ### Data Tuple
 
-A Data Tuple (Tuple) is now defined. This is used to contain the actual Table and Column data, a Record in effect. It simply has template parameter that agree with the Columns in the Table. ORDER is important here but ONLY here. The order of the Type must match the order of the Fields so the Column characteristic match to the correct Type.
+A Data Tuple (Tuple) is now defined. This is used to contain the actual Table and Column data, a Record in effect. It simply has template parameter that agree with the Columns in the Table. Order is not important s the Tuple and Field are bound based on type.
 
 ```c++
   using Tuple = std::tuple<Alt_id, Id, name_ns::Name, Mobile, name_ns::Full, Phone, Email,
@@ -554,11 +561,13 @@ At this point it may be questioned as to why two Tuples have been defined instea
 
 Also of note are the static_asserts. These check that the correct number of types are in the Data Tuple and that a matching number of Fields are defined. This is another historically common error source particularly when modifying a Table Schema. If either of these assertions fail the code will not compile.
 
+Compilation will also fail if there is a mismatch in the types of the Fields and the Data Tuple ensuring that neither can become unsynchronized.
+
 ### Table Class and Free Function Declarations
 
 The Table Class is declared much the same way as the Column Types. Here we can see a specialized Class Method being declared to extend the class beyond it standardized common characteristics.
 
-Standardized Free Functions are also declared along with sepecialized Functions. Note that this standardization is only possible due to Namespacing. This allows the functions to be defined in terms of generic names such as Class and Id and therefore be texturally equivalent. This is an alternative method of generic programming that avoid some of the issues of Templates like long an complicated error messages. However, although errors can be short and clear, their location can be differcult to find as compilers and IDEs do not understand the include file structure. There are meta techniques that can be used to mitigate some of this but they are beyond the scope of the current discussion.
+Standardized Free Functions are also declared along with sepecialized Functions. Note that this standardization is only possible due to Namespacing. This allows the functions to be defined in terms of generic names such as Class and Id and therefore be texturally equivalent. This is an alternative method of generic programming that avoid some of the issues of Templates like long and complicated error messages. However, although errors can be short and clear, their location can be differcult to find as compilers and IDEs do not understand the include file structure. There are meta techniques that can be used to mitigate some of this but they are beyond the scope of the current discussion.
 
 ```c++
   class Class
@@ -777,9 +786,9 @@ Here the additional function parameter is used solely to determine the Type and 
 	Type value = instance.get(type_example);
 ```
 
-A significant benefit of using the get/set functions is that it encourages the use on Strong Typing in other parts of the code resulting in a style where primitive and ambiguous type ( int, double, std::string) are used for calculation and/or efficiency reasons only and are converted to strong types as soon as possible. This helps avoid the clasical issues of mis-ordered or mis-understood variables being used.
+A significant benefit of using the get/set functions is that it encourages the use on Strong Typing in other parts of the code resulting in a style where primitive and ambiguous types ( int, double, std::string) are used for calculation and/or efficiency reasons only and are converted to strong types as soon as possible. This helps avoid the clasical issues of mis-ordered or mis-understood variables being used.
 
-Note that this does not mean that getters and setters will never be written. In the example above the Team method was written because some of the locations it was called required the full Namespace to be written each time. Using the Class Method Arguement Dependent Lookup (ADL) allows the correct function to be located based on the class. This need is however mitigated by the following.
+Note that this does not mean that getters and setters will never be written. In the example above the Team method was written because some of the locations it was called required the full Namespace to be written each time. Using the Class Method Argument Dependent Lookup (ADL) allows the correct function to be located based on the class. This need is however mitigated by the following.
 
 It is also possible to write both the following
 
